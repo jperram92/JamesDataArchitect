@@ -1,5 +1,5 @@
 <!--
-  @description       : Query Plan Simulator with Field Analyzer
+  @description       : Query Plan Simulator with Field Analyzer & Histogram
   @author            : jamesperram@gmail.com
   @last modified on  : 04-21-2025
 -->
@@ -21,8 +21,8 @@
                 <div class="slds-box slds-m-top_x-small">
                     <template for:each={autocompleteResults} for:item="account">
                         <div key={account} class="slds-p-around_x-small slds-border_bottom" 
-                            onclick={handleSelectAccount} 
-                            data-name={account}>
+                             onclick={handleSelectAccount} 
+                             data-name={account}>
                             {account}
                         </div>
                     </template>
@@ -55,6 +55,30 @@
                 </template>
             </template>
         </template>
+
+        <template if:true={performanceTip}>
+            <div class="slds-box slds-m-top_medium slds-theme_alert-texture">
+                <p><b>⚡ Performance Tip:</b> {performanceTip}</p>
+            </div>
+        </template>
+
+        <template if:true={histogramData.length}>
+            <div class="slds-box slds-m-top_medium">
+                <h3 class="slds-text-heading_small">📊 Record Distribution by Created Month</h3>
+                <template for:each={histogramData} for:item="bucket">
+                    <div key={bucket.label} class="slds-grid slds-m-top_x-small">
+                        <div class="slds-col slds-size_1-of-4">{bucket.label}</div>
+                        <div class="slds-col slds-size_3-of-4">
+                            <div class="slds-progress-bar slds-progress-bar_circular slds-size_full" style="height: 20px; background: #f3f3f3;">
+                                <div class="slds-progress-bar__value" style={bucket.barStyle}>
+                                    <span class="slds-assistive-text">{bucket.count}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>        
 
         <template if:true={fieldAnalysis}>
             <div class="slds-box slds-m-top_medium slds-theme_alert-texture">
