@@ -1,5 +1,14 @@
 ## 🔁 PRACTICE ROADMAP FOR SALESFORCE DEV ORG (DATA ARCHITECT TRACK)
 
+
+✅ Bonus Tip: Validate Metadata Types
+If you're unsure which metadata types are valid:
+
+Use Salesforce’s official Metadata Coverage Report
+
+Or the CLI registry itself:
+https://github.com/forcedotcom/source-deploy-retrieve/blob/main/src/registry/metadataRegistry.json
+
 ---
 
 ### ✅ 1. **Data Modeling / Database Design (25%)**
