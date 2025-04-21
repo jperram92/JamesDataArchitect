@@ -1,0 +1,94 @@
+To **create a mashup in Salesforce** that shows information from a website like `www.jamesperram.com.au`, you can use one of the following common approaches:
+
+---
+
+### 🔹 What is a Salesforce Mashup?
+A **mashup** in Salesforce is when you **combine Salesforce UI** with **external data** from another source (like a website or external system) **in real-time**, without storing that data directly in Salesforce.
+
+---
+
+## ✅ 3 Common Approaches to Implement a Mashup:
+
+### 1. **Lightning Component (LWC or Aura) + REST API**
+Use a Lightning Web Component (LWC) to call an API from `www.jamesperram.com.au` (if it exposes one) and display the result.
+
+#### Steps:
+1. **Ensure CORS is Configured:**
+   - Go to **Setup → CORS** and add `https://www.jamesperram.com.au`.
+
+2. **Expose or Identify the API Endpoint** (e.g., `https://www.jamesperram.com.au/api/profile`)
+   - The external site must allow GET/POST requests.
+
+3. **Build a Lightning Web Component**:
+```javascript
+// jamesPerramMashup.js
+import { LightningElement } from 'lwc';
+
+export default class JamesPerramMashup extends LightningElement {
+    data;
+
+    connectedCallback() {
+        fetch('https://www.jamesperram.com.au/api/profile')
+            .then(response => response.json())
+            .then(result => {
+                this.data = result;
+            })
+            .catch(error => {
+                console.error('Error fetching data', error);
+            });
+    }
+}
+```
+
+```html
+<!-- jamesPerramMashup.html -->
+<template>
+    <template if:true={data}>
+        <p>Name: {data.name}</p>
+        <p>Title: {data.title}</p>
+    </template>
+    <template if:false={data}>
+        <p>Loading profile data...</p>
+    </template>
+</template>
+```
+
+---
+
+### 2. **Visualforce + iFrame Embed (simplest method)**
+If the external site has a **public-facing webpage**, you can embed it in an iframe.
+
+#### Visualforce Page Example:
+```xml
+<apex:page>
+    <iframe src="https://www.jamesperram.com.au" width="100%" height="800px" frameborder="0"/>
+</apex:page>
+```
+
+> ⚠️ Some websites block embedding via `X-Frame-Options: DENY`. If `www.jamesperram.com.au` blocks iframes, this won’t work.
+
+---
+
+### 3. **External Objects (if API is available and OData)**
+If the external data source supports **OData or a REST API**, you can use **Salesforce Connect** to create **External Objects**.
+
+- Great for **read-only** data.
+- Appears natively in Salesforce, but is **not persisted**.
+
+> Note: Salesforce Connect is a **paid feature**.
+
+---
+
+## ⚠️ Considerations:
+- **Security**: If you’re hitting an external site from the browser, **CORS headers** on the site must allow it.
+- **Authentication**: If the API requires a key/token, use **Named Credentials** and an **Apex callout** instead.
+- **Governor Limits**: Keep in mind if you switch to Apex-based mashups, platform limits apply.
+
+---
+
+## 🎯 Best for Public Data?
+- If you're showing **read-only public content**, go with **Option 1 (LWC)** or **Option 2 (iFrame)**.
+
+---
+
+Want me to build you a working LWC starter for this that you can drop into a record page?
