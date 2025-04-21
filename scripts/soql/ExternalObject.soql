@@ -1,0 +1,18 @@
+/**
+ * @description       : 
+ * @author            : jamesperram@gmail.com
+ * @group             : 
+ * @last modified on  : 04-21-2025
+ * @last modified by  : jamesperram@gmail.com
+**/
+## return data from the external OData source ##
+SELECT CustomerName__c, OrderID__c, ProductID__c, ProductName__c, Quantity__c, Salesperson__c, ShipperName__c, UnitPrice__c
+FROM Invoice__x 
+LIMIT 5
+
+## Anoy script ##
+Map<String, Schema.SObjectField> fields = Schema.getGlobalDescribe().get('Invoice__x').getDescribe().fields.getMap();
+for (String fieldName : fields.keySet()) {
+    System.debug(fieldName);
+}
+

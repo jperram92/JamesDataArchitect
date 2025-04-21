@@ -1,0 +1,22 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 04-21-2025
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="ERP Invoices" icon-name="custom:custom63">
+        <template if:true={invoices}>
+            <lightning-datatable
+                key-field="Id"
+                data={invoices}
+                columns={columns}
+                hide-checkbox-column="true">
+            </lightning-datatable>
+        </template>
+        <template if:true={error}>
+            <p class="slds-text-color_error">{error}</p>
+        </template>
+    </lightning-card>
+</template>
