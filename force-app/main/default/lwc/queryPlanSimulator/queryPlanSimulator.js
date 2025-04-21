@@ -1,6 +1,8 @@
 import { LightningElement, track } from 'lwc';
 import simulateQuery from '@salesforce/apex/QueryPlanSimulatorController.simulateQuery';
 import findAccountNames from '@salesforce/apex/QueryPlanSimulatorController.findAccountNames';
+import describeFieldMetadata from '@salesforce/apex/FieldMetadataService.describeFieldMetadata';
+
 
 export default class QueryPlanSimulator extends LightningElement {
     objectName = '';
@@ -11,6 +13,34 @@ export default class QueryPlanSimulator extends LightningElement {
     @track result;
     @track error;
     @track autocompleteResults = [];
+    @track fieldAnalysis;
+    @track fieldAnalysisError;
+
+    handleAnalyzeField() {
+        this.fieldAnalysis = null;
+        this.fieldAnalysisError = null;
+    
+        if (!this.objectName || !this.selectedField) {
+            this.fieldAnalysisError = 'Please enter object name and field name.';
+            return;
+        }
+    
+        describeFieldMetadata({ objectName: this.objectName, fieldName: this.selectedField })
+            .then(data => {
+                if (data.error) {
+                    this.fieldAnalysisError = data.error;
+                } else {
+                    this.fieldAnalysis = data;
+                }
+            })
+            .catch(err => {
+                this.fieldAnalysisError = err.body?.message || err.message;
+            });
+    }
+
+    handleFieldInput(event) {
+        this.selectedField = event.detail.value;
+    }
 
     handleObjectChange(event) {
         this.objectName = event.detail.value;

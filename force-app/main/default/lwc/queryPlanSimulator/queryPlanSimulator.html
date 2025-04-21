@@ -1,9 +1,7 @@
 <!--
-  @description       : 
+  @description       : Query Plan Simulator with Field Analyzer
   @author            : jamesperram@gmail.com
-  @group             : 
   @last modified on  : 04-21-2025
-  @last modified by  : jamesperram@gmail.com
 -->
 <template>
     <lightning-card title="Query Plan Simulator">
@@ -32,6 +30,11 @@
             </template>
 
             <lightning-button variant="brand" label="Run Simulation" onclick={runQuery}></lightning-button>
+
+            <div class="slds-m-top_medium">
+                <lightning-input label="Field to Analyze" onchange={handleFieldInput}></lightning-input>
+                <lightning-button label="Analyze Field Metadata" onclick={handleAnalyzeField} class="slds-m-top_small"></lightning-button>
+            </div>
         </div>
 
         <template if:true={result}>
@@ -53,8 +56,25 @@
             </template>
         </template>
 
+        <template if:true={fieldAnalysis}>
+            <div class="slds-box slds-m-top_medium slds-theme_alert-texture">
+                <h3 class="slds-text-heading_small">🔍 Field Metadata Analysis</h3>
+                <p><b>Field:</b> {fieldAnalysis.fieldName} ({fieldAnalysis.label})</p>
+                <p><b>Data Type:</b> {fieldAnalysis.dataType}</p>
+                <p><b>Custom Field:</b> {fieldAnalysis.isCustom}</p>
+                <p><b>External ID:</b> {fieldAnalysis.isExternalId}</p>
+                <p><b>Unique:</b> {fieldAnalysis.isUnique}</p>
+                <p><b>Indexed (inferred):</b> {fieldAnalysis.isIndexed}</p>
+                <p><b>Selectivity Estimate:</b> {fieldAnalysis.selectivityHint}</p>
+            </div>
+        </template>
+
         <template if:true={error}>
             <div class="slds-text-color_error slds-p-around_medium">Error: {error}</div>
+        </template>
+
+        <template if:true={fieldAnalysisError}>
+            <div class="slds-text-color_error slds-p-around_medium">Field Error: {fieldAnalysisError}</div>
         </template>
     </lightning-card>
 </template>
