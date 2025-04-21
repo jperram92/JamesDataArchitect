@@ -1,0 +1,60 @@
+<!--
+  @description       : 
+  @author            : jamesperram@gmail.com
+  @group             : 
+  @last modified on  : 04-21-2025
+  @last modified by  : jamesperram@gmail.com
+-->
+<template>
+    <lightning-card title="Query Plan Simulator">
+        <div class="slds-p-around_medium">
+            <lightning-input label="Object API Name" value={objectName} onchange={handleObjectChange}></lightning-input>
+            <lightning-input label="WHERE Clause (use {{VALUE}} for substitution)" value={whereClause} onchange={handleWhereChange}></lightning-input>
+            <lightning-input label="Value for {{VALUE}}" value={valueInput} onchange={handleValueChange}></lightning-input>
+
+            <lightning-input 
+                label="Search Account Name" 
+                value={autocompleteInput}
+                onchange={handleAutocompleteInput}
+                onfocus={handleAutocompleteFocus}>
+            </lightning-input>
+
+            <template if:true={autocompleteResults.length}>
+                <div class="slds-box slds-m-top_x-small">
+                    <template for:each={autocompleteResults} for:item="account">
+                        <div key={account} class="slds-p-around_x-small slds-border_bottom" 
+                            onclick={handleSelectAccount} 
+                            data-name={account}>
+                            {account}
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <lightning-button variant="brand" label="Run Simulation" onclick={runQuery}></lightning-button>
+        </div>
+
+        <template if:true={result}>
+            <div class="slds-p-around_medium">
+                <p><b>Object:</b> {result.objectName}</p>
+                <p><b>Where Clause:</b> {result.whereClause}</p>
+                <p><b>Row Count:</b> {result.rowCount}</p>
+                <p><b>Execution Time (ms):</b> {result.executionTimeMs}</p>
+                <p><b>Notes:</b> {result.notes}</p>
+            </div>
+
+            <template if:true={result.sampleRecords}>
+                <h3 class="slds-text-heading_small slds-m-top_medium">Row Preview:</h3>
+                <template for:each={result.sampleRecords} for:item="record">
+                    <div key={record.Id} class="slds-box slds-m-top_x-small">
+                        <p><b>ID:</b> {record.Id}</p>
+                    </div>
+                </template>
+            </template>
+        </template>
+
+        <template if:true={error}>
+            <div class="slds-text-color_error slds-p-around_medium">Error: {error}</div>
+        </template>
+    </lightning-card>
+</template>
