@@ -137,3 +137,143 @@ Create full-cycle ETL pipelines using Python or MuleSoft
 Explore LDV tools like Shield and Big Objects for real-world LDV resilience
 
 Recommended next step: Create a dashboard showing imported invoices, ETL success logs, and encryption audit trail for stakeholders.
+
+🎯 Objective
+
+To create a dynamic dashboard titled "DataOps Overview" that surfaces:
+
+ERP-sourced invoice records
+
+ETL job success/failure trends
+
+Changes to encrypted fields or sensitive data
+
+🏗️ Step 1: Define Report Foundations
+
+Custom Report Types:
+
+Invoices Report
+
+Base Object: Invoices__x
+
+Related Object: Opportunity or Account
+
+Filters: Invoice Date = LAST 30 DAYS
+
+ETL Logs Report
+
+Custom Object: ETL_Log__c
+
+Fields: Status, Sync_Time__c, Record_Count__c, Job_Reference__c
+
+Grouped by: Status (Success/Fail)
+
+Audit Trail / Field Change Report
+
+Source: Setup Audit Trail (download/export required for external view) or Field History Tracking
+
+Fields: Object, Field, Old Value, New Value, Modified By, Date
+
+🗂️ Step 2: ETL_Log__c Object Schema
+
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>ETL Log</label>
+    <fullName>ETL_Log__c</fullName>
+    <fields>
+        <fullName>Job_Reference__c</fullName>
+        <label>Job Reference</label>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Sync_Time__c</fullName>
+        <label>Sync Time</label>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Record_Count__c</fullName>
+        <label>Record Count</label>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <label>Status</label>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <value>Success</value>
+                <value>Failed</value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+</CustomObject>
+
+📊 Step 3: Build the Dashboard
+
+Name: DataOps Overview
+
+Location: Public Folder or Data Governance Folder
+
+Components:
+
+Latest Imported Invoices
+
+Type: Table or Bar Graph
+
+Report: Invoices__x Report (LAST 30 DAYS)
+
+ETL Job Outcomes
+
+Type: Donut or Bar Chart
+
+Report: ETL_Log__c grouped by Status
+
+Subtitle: "Last 10 Syncs"
+
+Encrypted Field Changes
+
+Type: Table or Line Chart
+
+Report: Encrypted Field Change History
+
+Include: Field Name, Change Date, Modified By
+
+Design Tips:
+
+Use chart colors to reflect job success (green) and failure (red)
+
+Enable dynamic filters by Date, Object, or Job
+
+Include descriptive dashboard headers
+
+🚀 Deployment Option: Metadata JSON
+
+Use Salesforce CLI or VS Code to deploy dashboard metadata:
+
+sfdx force:source:deploy -p force-app/main/default/reports/Dashboard_DataOpsOverview.report-meta.xml
+
+You can extract a sample dashboard using:
+
+sfdx force:source:retrieve -m Dashboard:DataOps_Overview
+
+📈 Visualization Samples (Concepts)
+
+KPI Widgets: Total Invoices, Total ETL Failures This Week
+
+Heat Map: Time of day with most failures (if logs have timestamp granularity)
+
+Trend Line: Monthly encrypted field changes
+
+Stacked Bar: Records imported by ETL Job Reference
+
+✅ Summary
+
+With this guide, you can:
+
+Build stakeholder-facing dashboards for DataOps transparency
+
+Track ETL reliability, audit sensitive data changes
+
+Present integrated ERP activity inside Salesforce visually
+
+This dashboard is the final piece in turning your mock architecture into a measurable, visual, enterprise-grade simulation.
+
